@@ -1,4 +1,5 @@
-from app.models.BaseModel import db
+from app import db
+
 
 class GenericDAO:
     _model = None
@@ -29,5 +30,6 @@ class GenericDAO:
     @classmethod
     def delete(cls, obj_id):
         obj = cls._model.query.get(obj_id)
-        db.session.delete(obj)
-        db.session.commit()
+        if obj:
+            db.session.delete(obj)
+            db.session.commit()

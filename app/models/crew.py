@@ -1,13 +1,8 @@
-from sqlalchemy.orm import relationship
-from flask_sqlalchemy import SQLAlchemy
+from app.models.base_model import BaseModel
+from sqlalchemy import Column, Integer, ForeignKey, Table, ForeignKeyConstraint
 
-db = SQLAlchemy()
-
-
-class Crew(db.Model):
-    __tablename__ = 'crew'
-
-    person_id = db.Column(db.Integer, db.ForeignKey('person.id'), primary_key=True, nullable=False)
-    flight_id = db.Column(db.Integer, db.ForeignKey('flight.id'), primary_key=True, nullable=False)
-    person = relationship('Person', back_populates='flight')
-    flight = relationship('Flight', back_populates='person')
+crew = Table('crew', BaseModel.metadata, Column('flight_id', Integer, ForeignKey('flight.id')),
+             Column('person_id', Integer, ForeignKey('person.id')),
+             ForeignKeyConstraint(['flight_id'], ['flight.id']),
+             ForeignKeyConstraint(['person_id'], ['person.id'])
+             )

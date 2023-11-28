@@ -1,26 +1,25 @@
-# app/models/type.py
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship
 
-from app.models.BaseModel import BaseModel
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from app.dto.type_dto import TypeDTO
+from app.models.base_model import BaseModel
 
 
-class Type(BaseModel, db.Model):
+class Type(BaseModel):
     __tablename__ = 'type'
 
-    id = db.Column(db.Integer, primary_key=True, nullable=False)
-    name = db.Column(db.String(54), nullable=True)
-    latitude = db.Column(db.DECIMAL(10, 6), nullable=True)
-    longitude = db.Column(db.DECIMAL(10, 6), nullable=True)
-
-    # Add other fields and relationships as needed
+    id = Column(Integer, primary_key=True, nullable=False)
+    name = Column(String(54), nullable=True)
+    aircraft = relationship('app.models.aircraft.Aircraft', backref='type', cascade='all, delete-orphan',
+                            single_parent=True)
 
     def to_dto(self):
-        # Implement if needed
-        pass
+        return TypeDTO(
+            name=self.name
+        )
 
     @classmethod
-    def from_dto(cls, type_dto):
-        # Implement if needed
-        pass
+    def from_dto(cls, data):
+        return cls(
+            name=data.get("name")
+        )

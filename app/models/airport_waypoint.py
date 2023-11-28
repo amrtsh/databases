@@ -1,14 +1,11 @@
-from sqlalchemy.orm import relationship
-from flask_sqlalchemy import SQLAlchemy
+from app.models.base_model import BaseModel
+from sqlalchemy import Column, Integer, ForeignKey, Table, ForeignKeyConstraint
 
-db = SQLAlchemy()
-
-
-class AirportWaypoint(db.Model):
-    __tablename__ = 'airport_waypoint'
-
-    airport_id = db.Column(db.Integer, db.ForeignKey('airport.id'), primary_key=True)
-    waypoint_id = db.Column(db.Integer, db.ForeignKey('waypoint.id'), primary_key=True)
-    airport = relationship('Airport', back_populates='waypoints')
-    waypoint = relationship('Waypoint', back_populates='airports')
-#     back_populates двонаправний зв'язок між двома класами
+airport_waypoint = Table(
+    'airport_waypoint',
+    BaseModel.metadata,
+    Column('airport_id', Integer, ForeignKey('airport.id')),
+    Column('waypoint_id', Integer, ForeignKey('waypoint.id'), primary_key=True),
+    ForeignKeyConstraint(['airport_id'], ['airport.id']),
+    ForeignKeyConstraint(['waypoint_id'], ['waypoint.id'])
+)

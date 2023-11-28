@@ -1,4 +1,4 @@
-from app.dao.general_dao import GenericDAO
+from app.dao.generic_dao import GenericDAO
 from app.models.country import Country
 
 

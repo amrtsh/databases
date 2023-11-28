@@ -1,13 +1,9 @@
-from sqlalchemy.orm import relationship
-from flask_sqlalchemy import SQLAlchemy
+from app.models.base_model import BaseModel
+from sqlalchemy import Column, Integer, ForeignKey, Table, ForeignKeyConstraint
 
-db = SQLAlchemy()
-
-
-class FlightHasAircraft(db.Model):
-    __tablename__ = 'flight_has_aircraft'
-
-    flight_id = db.Column(db.Integer, db.ForeignKey('flight.id'), primary_key=True, nullable=False)
-    aircraft_id = db.Column(db.Integer, db.ForeignKey('aircraft.id'), primary_key=True, nullable=False)
-    aircraft = relationship('Aircraft', back_populates='flight')
-    flight = relationship('Flight', back_populates='person')
+flight_has_aircraft = Table('flight_has_aircraft', BaseModel.metadata,
+                            Column('flight_id', Integer, ForeignKey('flight.id')),
+                            Column('aircraft_id', Integer, ForeignKey('aircraft.id')),
+                            ForeignKeyConstraint(['flight_id'], ['flight.id']),
+                            ForeignKeyConstraint(['aircraft_id'], ['aircraft.id'])
+                            )

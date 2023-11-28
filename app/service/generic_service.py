@@ -3,12 +3,12 @@ class GenericService:
 
     @classmethod
     def create(cls, dto):
-        obj = cls._dao.get_model().from_dto(dto)
-        cls._dao.create(obj)
+        cls._dao.create(dto)
 
     @classmethod
     def get_by_id(cls, obj_id):
-        return cls._dao.get_by_id(obj_id)
+        return cls._dao.get_by_id(obj_id).to_dto()
+
 
     @classmethod
     def get_all(cls):
@@ -20,12 +20,14 @@ class GenericService:
         obj = cls._dao.get_by_id(obj_id)
 
         if obj:
-            for key, value in dto.__dict__.items():
+            # Update only the fields present in the DTO
+            for key, value in dto.items():
                 setattr(obj, key, value)
 
             cls._dao.update(obj)
-
-        return obj
+            return obj
+        else:
+            return None
 
     @classmethod
     def delete(cls, obj_id):
